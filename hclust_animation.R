@@ -64,7 +64,8 @@ gg_base <- ggplot(data, aes(x, id, fill = value, group = variable)) +
             ungroup() %>%
             mutate(value = 0, id = ""),
         aes(x = x, y = -0.5, label = variable, group = variable),
-        hjust = 0.5) +
+        hjust = 0.5,
+        size = 4.5) +
     theme_minimal() +
     coord_cartesian(clip = "off") +
     scale_fill_distiller(palette = "RdBu") +
@@ -88,7 +89,11 @@ gg_base <- ggplot(data, aes(x, id, fill = value, group = variable)) +
 # Animate
 anim_plot <- gg_base +
     ggtitle("{closest_state}") +
-    transition_states(Iteration, transition_length = 1, state_length = 1) +
+    transition_states(
+        Iteration,
+        transition_length = 1,
+        state_length = 1,
+        wrap = FALSE) +
     exit_fly(x_loc = 0, y_loc = 0) +
     enter_fly(x_loc = 0, y_loc = 0) +
     theme(plot.title = element_text(size = 16))
@@ -97,5 +102,7 @@ anim_plot <- gg_base +
 # Save animation as animated GIF
 animate(
     anim_plot,
+    nframes = 150,
     width = 960, width = 540, units = "px",
+    end_pause = 50,
     renderer = gifski_renderer("animation.gif"))
